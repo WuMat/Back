@@ -73,7 +73,8 @@ const login = async(req, res) => {
         return res.status(200).json({
           message: 'auth success',
           token: token,
-          expiresIn: time
+          expiresIn: time,
+          userId: user._id
         })
       }
       return res.status(404).json({

@@ -3,9 +3,10 @@ import mongoose from 'mongoose';
 import Film from '../models/film'
 
 const getAll = async(req, res, next) => {
+  const user = req.headers.userid;
   const filmsPromis = 
   Film
-    .find()
+    .find({ userId: user })
   const countPromis =  Film.countDocuments();
   const[films, count] = await Promise.all([filmsPromis, countPromis]);
   return res.status(200).json({films, count })
@@ -17,7 +18,8 @@ const send = async(req, res, next) => {
     titlePl: req.body.titlePl,
     title: req.body.title,
     diskName: req.body.diskName,
-    size: req.body.size
+    size: req.body.size,
+    userId: req.headers.userid
   });
   film
   .save()

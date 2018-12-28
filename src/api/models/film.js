@@ -7,6 +7,7 @@ const Film = mongoose.Schema({
   title: {type: String, required: true},
   diskName: {type: String, required: true},
   size: {type: String, required: true},
+  userId: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true}
 
 },{
   timestamps: true

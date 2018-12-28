@@ -8,7 +8,7 @@ import {checkAuth} from '../moddlewares/check-auth'
 
 
 router.get('/', checkAuth, catchAsync(getAll))
-router.post('/', checkAuth, catchAsync(send))
-router.delete('/:filmId', checkAuth, catchAsync(delet))
+router.post('/',checkAuth, catchAsync(send))
+router.delete('/:filmId',checkAuth, catchAsync(delet))
 
 export default router
