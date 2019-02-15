@@ -1,0 +1,6 @@
+"scripts": {
+  "dev": "babel-node src/index.js",
+  "build": "babel src --out-dir dist",
+  "serve": "node dist/index.js",
+  "start": "yarn build && yarn serve"
+},

@@ -1,18 +1,28 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-import Film from '../models/film'
+import Film from "../models/film";
 
-const getAll = async(req, res, next) => {
-  const user = req.headers.userid;
-  const filmsPromis = 
-  Film
-    .find({ userId: user })
-  const countPromis =  Film.countDocuments();
-  const[films, count] = await Promise.all([filmsPromis, countPromis]);
-  return res.status(200).json({films, count })
-}
+const getAll = async (req, res, next) => {
+  const filmsPromis = Film.find();
+  const countPromis = Film.countDocuments();
+  const [films, count] = await Promise.all([filmsPromis, countPromis]);
+  return res.status(200).json({ films, count });
+};
 
-const send = async(req, res, next) => {
+const searching = async (req, res, next) => {
+  const serachingData = req.body.name;
+  const filmsPromis = Film.find({
+    $or: [
+      { titlePl: { $regex: serachingData, $options: "i" } },
+      { title: { $regex: serachingData, $options: "i" } }
+    ]
+  });
+  const countPromis = Film.countDocuments();
+  const [films, count] = await Promise.all([filmsPromis, countPromis]);
+  return res.status(200).json({ films, count });
+};
+
+const send = async (req, res, next) => {
   const film = new Film({
     _id: new mongoose.Types.ObjectId(),
     titlePl: req.body.titlePl,
@@ -21,36 +31,31 @@ const send = async(req, res, next) => {
     size: req.body.size,
     userId: req.headers.userid
   });
-  film
-  .save()
-  .then(result=>{
+  film.save().then(result => {
     console.log(result);
     res.status(200).json({
       update: result
-    })
-  })
-}
+    });
+  });
+};
 
-const delet = async(req, res) => {
+const delet = async (req, res) => {
   const id = req.params.filmId;
 
-  Film
-  .deleteOne({_id: id})
-  .exec()
-  .then(result => {
-    console.log(result)
-    res.status(200).json({
-      message: 'film removed'
+  Film.deleteOne({ _id: id })
+    .exec()
+    .then(result => {
+      console.log(result);
+      res.status(200).json({
+        message: "film removed"
+      });
     })
-  })
-  .catch(err => {
-    console.log(err)
-    res.status(500).json({
-      message:err
-    })
-  })
-}
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        message: err
+      });
+    });
+};
 
-export{getAll, send, delet}
-
-
+export { getAll, send, delet, searching };
